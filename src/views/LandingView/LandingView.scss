@@ -1,0 +1,47 @@
+.landing-view{
+
+    &__user-list{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        &__user-row{
+            display: flex;
+            justify-content: space-between;
+            box-sizing: border-box;
+            width: 50%;
+            height: 5rem;
+            margin-top: 0.5rem;
+            background-color: var(--user-row-color);
+            
+            &__user-info{
+                display: flex;
+                flex-direction: column;
+                justify-content: space-evenly;
+                width: 100%;
+            }
+
+            &__options{
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                width: fit-content;
+                padding: 0.5rem;
+
+                button{
+                    cursor: pointer;
+                    &:hover{
+                        background-color: greenyellow;
+                    }
+                    &:hover:not(.edit-button){
+                        background-color: rgba(255, 6, 6, 0.945);
+                    }
+                }
+            }
+            .anticon-environment{
+                padding: 0.2rem;
+                color: red;
+            }
+        }
+    }
+
+}

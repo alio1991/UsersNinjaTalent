@@ -57,11 +57,11 @@ const getUsers = [
           }
 ];
 
-const createUser = () => {
+const createUser = (data) => {
   console.log('Usuario creado!!');
 }
 
-const editUser = (id) => {
+const editUser = (id, data) => {
   console.log('Usuario '+id+' modificado!!');
 }
 
