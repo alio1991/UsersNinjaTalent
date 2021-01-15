@@ -57,4 +57,16 @@ const getUsers = [
           }
 ];
 
-export {getUsers};
+const createUser = () => {
+  console.log('Usuario creado!!');
+}
+
+const editUser = (id) => {
+  console.log('Usuario '+id+' modificado!!');
+}
+
+const deleteUser = (id) => {
+  console.log('Usuario '+id+' borrado!!');
+}
+
+export {getUsers, createUser, editUser, deleteUser};
