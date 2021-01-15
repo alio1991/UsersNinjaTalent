@@ -1,4 +1,5 @@
-import './App.css';
+import './style/App.css';
+import './style/variables.css';
 import { HashRouter, Route, Switch } from 'react-router-dom';
 import { LandingView } from './views/LandingView/LandingView.jsx';
 import { ErrorPage } from './views/ErrorPage/ErrorPage.jsx';
