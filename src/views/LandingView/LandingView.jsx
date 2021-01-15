@@ -3,6 +3,7 @@ import { getUsers, createUser, deleteUser, editUser } from '../../services/userS
 import './LandingView.scss';
 import { Modal, Form, Input, DatePicker } from 'antd';
 import { EnvironmentOutlined, EditOutlined, DeleteOutlined, PlusOutlined } from '@ant-design/icons';
+import moment from 'moment';
 
 export function LandingView() {
 
@@ -27,7 +28,7 @@ export function LandingView() {
 		if(user){
 			userForm.setFieldsValue(user);
 			userForm.setFieldsValue(user.address);
-
+			userForm.setFieldsValue({birthDate: moment(user.birthDate)})
 		}
 		setIsEditModalVisible(true);
 	}
@@ -100,13 +101,13 @@ export function LandingView() {
 						>
 							<Input />
 						</Form.Item>
-{/* 
+
 						<Form.Item
 							label="Birth Date"
 							name="birthDate"
 						>
-							<DatePicker onChange={(date, dateString)=> console.log(dateString)} />
-						</Form.Item> */}
+							<DatePicker onChange={(date, dateString)=> userForm.setFieldsValue(dateString ? {birthDate: moment(dateString)} : undefined)} />
+						</Form.Item>
 
 						<hr/>
 						<Form.Item
