@@ -1,12 +1,13 @@
 // const getUsers = [
-const urlBase = 'http://127.0.0.1:8080/users/';
+const urlUserBase = 'http://127.0.0.1:8080/users/';
+const urlCountries = 'http://127.0.0.1:8080/countries/'
 
 const getUsers = () =>{
-  return fetch(urlBase);
+  return fetch(urlUserBase);
 }
 
 const createUser = (data) => {
-  return fetch(urlBase,
+  return fetch(urlUserBase,
     {
         headers: {
           'Accept': 'application/json',
@@ -18,7 +19,7 @@ const createUser = (data) => {
 }
 
 const editUser = (id, data) => {  
-  return fetch(urlBase+id,
+  return fetch(urlUserBase+id,
     {
         headers: {
           'Accept': 'application/json',
@@ -30,10 +31,14 @@ const editUser = (id, data) => {
 }
 
 const deleteUser = (id) => {
-  return fetch(urlBase+id,
+  return fetch(urlUserBase+id,
     {
         method: "DELETE",
     })
 }
 
-export {getUsers, createUser, editUser, deleteUser};
+const getCountries = () => {
+    return fetch(urlCountries)
+}
+
+export {getUsers, createUser, editUser, deleteUser, getCountries};
