@@ -18,6 +18,11 @@
                 flex-direction: column;
                 justify-content: space-evenly;
                 width: 100%;
+                &__address{
+                    display: flex;
+                    justify-content: center;
+                    align-items: baseline;
+                }
             }
 
             &__options{

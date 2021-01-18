@@ -9,7 +9,7 @@ export function LandingView() {
 
 	const [userForm] = Form.useForm();
 	const [users, setUsers] = useState();
-  const [isEditModalVisible, setIsEditModalVisible] = useState(false);
+  	const [isEditModalVisible, setIsEditModalVisible] = useState(false);
 	const [UserSelected, setUserSelected] = useState();
 
 
@@ -17,10 +17,15 @@ export function LandingView() {
 		labelCol: { span: 8 },
 		wrapperCol: { span: 16 },
 	};
-
+	
 	useEffect(()=>{
-		setUsers(getUsers);
-	},[getUsers]);
+		updateList();
+	},[]);
+
+
+	const updateList = () => {
+		getUsers().then(res => res.json()).then(users => setUsers(users));
+	}
 
 	const usingForm = (user) => {
 		setUserSelected(user);
@@ -33,15 +38,34 @@ export function LandingView() {
 		setIsEditModalVisible(true);
 	}
 
-	const newUser = () => {
-		createUser([]);
-	}
 
 	const modifyUserInfo = () => {
-		editUser(UserSelected,[]);
-		setIsEditModalVisible(false);
+		const formFields = userForm.getFieldsValue();
+		const address = {country:formFields.country, postalcode: formFields.postalcode, street: formFields.street, city: formFields.city};
+		delete formFields.country
+		delete formFields.postalcode
+		delete formFields.street
+		delete formFields.city
+		formFields.address = address;
+		formFields.birthDate = formFields.birthDate ? formFields.birthDate._i : undefined;
+		console.log(formFields);
+		if(formFields.birthDate){
+			if(UserSelected){
+				editUser(UserSelected._id,formFields).then(()=> {setIsEditModalVisible(false); updateList();});
+				setIsEditModalVisible(false);
+			}else{
+				createUser(formFields).then(()=> {setIsEditModalVisible(false); updateList();});
+			}
+		}else{
+			console.log('FECHA NECESARIA');
+		}
 	}
 
+	const removeUser = (id) => {
+		deleteUser(id).then(()=> updateList())
+		;
+	}
+	
   return (
     <React.Fragment>
       <div className="landing-view">
@@ -50,7 +74,7 @@ export function LandingView() {
 					</div><button onClick={() => usingForm(undefined)}>Add user <PlusOutlined /></button>
 				<div className="landing-view__user-list">
 					{users&&users.map(user=>
-						<div key={user.id} className="landing-view__user-list__user-row">
+						<div key={user._id} className="landing-view__user-list__user-row">
 							<div className="landing-view__user-list__user-row__user-info">
 								<div className="landing-view__user-list__user-row__user-info__name-email-container">
 									{`${user.firstname} ${user.lastname}`}
@@ -61,7 +85,7 @@ export function LandingView() {
 							</div>
 							<div className="landing-view__user-list__user-row__options">
 								<button className="edit-button" onClick={()=> usingForm(user)}><EditOutlined /></button>
-								<button className="delete-button" onClick={()=> deleteUser(user.id)}><DeleteOutlined /></button>
+								<button className="delete-button" onClick={()=> removeUser(user._id)}><DeleteOutlined /></button>
 							</div>
 
 						</div>
