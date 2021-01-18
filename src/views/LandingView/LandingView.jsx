@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { getUsers, createUser, deleteUser, editUser, getCountries } from '../../services/userService.js'
 import { Modal, Form, Input, DatePicker, Select } from 'antd';
-import { EnvironmentOutlined, EditOutlined, DeleteOutlined, PlusOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
+import { EnvironmentOutlined, EditOutlined, DeleteOutlined, PlusOutlined, CalendarOutlined, MailOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import './LandingView.scss';
 
@@ -84,8 +84,14 @@ export function LandingView() {
 					{users&&users.map(user=>
 						<div key={user._id} className="landing-view__user-list__user-row">
 							<div className="landing-view__user-list__user-row__user-info">
-								<div className="landing-view__user-list__user-row__user-info__name-email-container">
-									{`${user.firstname} ${user.lastname}`}
+								<div className="landing-view__user-list__user-row__user-info__name">
+									<b>{`${user.firstname} ${user.lastname}`}</b>
+								</div>
+								<div className="landing-view__user-list__user-row__user-info__email">
+									<CalendarOutlined /><p>{`${user.birthDate}`}</p>
+								</div>
+								<div className="landing-view__user-list__user-row__user-info__email">
+									<MailOutlined /><p>{`${user.email}`}</p>
 								</div>
 								<div className="landing-view__user-list__user-row__user-info__address">
 									<EnvironmentOutlined /><p>{`${user.address.street},${user.address.city} - ${user.address.postalcode} (${user.address.country})`}</p>

@@ -8,12 +8,12 @@
             display: flex;
             justify-content: space-between;
             width: 50%;
-            height: 5rem;
+            height: 8rem;
             min-height: fit-content;
             margin-top: 0.5rem;
             background-color: var(--user-row-color);
-            
-            
+            box-shadow: 4px 3px 3px rgba(248, 179, 152, 0.74);
+
             &__user-info{
                 display: flex;
                 flex-direction: column;
@@ -24,16 +24,24 @@
                     justify-content: center;
                     align-items: baseline;
                 }
+                &__email{
+                    display: flex;
+                    justify-content: center;
+                    align-items: baseline;
+                }
             }
 
             &__options{
                 display: flex;
                 flex-direction: column;
-                justify-content: space-between;
+                justify-content: space-evenly;
                 width: fit-content;
                 padding: 0.5rem;
+                border-left: 1px solid black;
 
                 button{
+                    border: 0px;
+                    border-radius: 50%;
                     cursor: pointer;
                     &:hover{
                         background-color: greenyellow;
@@ -43,8 +51,10 @@
                     }
                 }
             }
+            .anticon{
+                padding: 0.3rem;
+            }
             .anticon-environment{
-                padding: 0.2rem;
                 color: red;
             }
         }
