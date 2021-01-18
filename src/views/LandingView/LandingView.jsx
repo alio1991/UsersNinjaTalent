@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { getUsers, createUser, deleteUser, editUser, getCountries } from '../../services/userService.js'
-import './LandingView.scss';
 import { Modal, Form, Input, DatePicker, Select } from 'antd';
 import { EnvironmentOutlined, EditOutlined, DeleteOutlined, PlusOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import moment from 'moment';
+import './LandingView.scss';
 
 export function LandingView() {
 
 	const { Option } = Select;
-
 	const [userForm] = Form.useForm();
 	const [users, setUsers] = useState();
   	const [isEditModalVisible, setIsEditModalVisible] = useState(false);
@@ -16,16 +15,12 @@ export function LandingView() {
 	const [countriesOptions, setcountriesOptions] = useState()
 
 
-	const layout = {
-		labelCol: { span: 8 },
-		wrapperCol: { span: 16 },
-	};
 	
 	useEffect(()=>{
 		updateList();
 		getCountries().then(res => res.json()).then(setcountriesOptions)
 	},[]);
-
+	
 
 	const updateList = () => {
 		getUsers().then(res => res.json()).then(users => setUsers(users));
@@ -41,10 +36,9 @@ export function LandingView() {
 		}
 		setIsEditModalVisible(true);
 	}
-
-
+	
+	
 	const modifyUserInfo = (FormInfo) => {
-		// const FormInfo = userForm.getFieldsValue();
 		const address = {country:FormInfo.country, postalcode: FormInfo.postalcode, street: FormInfo.street, city: FormInfo.city};
 		delete FormInfo.country
 		delete FormInfo.postalcode
@@ -52,21 +46,16 @@ export function LandingView() {
 		delete FormInfo.city
 		FormInfo.address = address;
 		FormInfo.birthDate = FormInfo.birthDate ? FormInfo.birthDate._i : undefined;
-		if(FormInfo.birthDate){
-			if(UserSelected){
-				editUser(UserSelected._id,FormInfo).then(()=> {setIsEditModalVisible(false); updateList();});
-				setIsEditModalVisible(false);
-			}else{
-				createUser(FormInfo).then(()=> {setIsEditModalVisible(false); updateList();});
-			}
+		if(UserSelected){
+			editUser(UserSelected._id,FormInfo).then(()=> {setIsEditModalVisible(false); updateList();});
+			setIsEditModalVisible(false);
 		}else{
-			console.log('FECHA NECESARIA');
-			// console.log(userForm.validateFields())
+			createUser(FormInfo).then(()=> {setIsEditModalVisible(false); updateList();});
 		}
 	}
-
+	
 	const removeUser = (id) => {
-		  Modal.confirm({
+		Modal.confirm({
 			title: '¿Are you sure?',
 			icon: <ExclamationCircleOutlined />,
 			content: 'You will delete this user.',
@@ -80,8 +69,13 @@ export function LandingView() {
 		modifyUserInfo(value);
 	}	
 	
-  return (
-    <React.Fragment>
+	const layout = {
+		labelCol: { span: 8 },
+		wrapperCol: { span: 16 },
+	};
+
+	return (
+		<React.Fragment>
       <div className="landing-view">
 				<h1>User List</h1>
 				<div className="new-user">
@@ -108,7 +102,6 @@ export function LandingView() {
 				<Modal 
 					title="Edit user modal" 
 					visible={isEditModalVisible} 
-					// onOk={()=> modifyUserInfo()} 
 					okButtonProps={{
 						form:"userForm",key:"submit", htmlType: 'submit'
 					}}
@@ -121,7 +114,6 @@ export function LandingView() {
 						name="basic"
 						initialValues={{ remember: true }}
 						onFinish={onFinish}
-						// onFinishFailed={onFinishFailed}
 					>
 						<Form.Item
 							label="First Name"
