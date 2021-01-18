@@ -1,16 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { getUsers, createUser, deleteUser, editUser } from '../../services/userService.js'
+import { getUsers, createUser, deleteUser, editUser, getCountries } from '../../services/userService.js'
 import './LandingView.scss';
-import { Modal, Form, Input, DatePicker } from 'antd';
-import { EnvironmentOutlined, EditOutlined, DeleteOutlined, PlusOutlined } from '@ant-design/icons';
+import { Modal, Form, Input, DatePicker, Select } from 'antd';
+import { EnvironmentOutlined, EditOutlined, DeleteOutlined, PlusOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import moment from 'moment';
 
 export function LandingView() {
+
+	const { Option } = Select;
 
 	const [userForm] = Form.useForm();
 	const [users, setUsers] = useState();
   	const [isEditModalVisible, setIsEditModalVisible] = useState(false);
 	const [UserSelected, setUserSelected] = useState();
+	const [countriesOptions, setcountriesOptions] = useState()
 
 
 	const layout = {
@@ -20,6 +23,7 @@ export function LandingView() {
 	
 	useEffect(()=>{
 		updateList();
+		getCountries().then(res => res.json()).then(setcountriesOptions)
 	},[]);
 
 
@@ -39,31 +43,42 @@ export function LandingView() {
 	}
 
 
-	const modifyUserInfo = () => {
-		const formFields = userForm.getFieldsValue();
-		const address = {country:formFields.country, postalcode: formFields.postalcode, street: formFields.street, city: formFields.city};
-		delete formFields.country
-		delete formFields.postalcode
-		delete formFields.street
-		delete formFields.city
-		formFields.address = address;
-		formFields.birthDate = formFields.birthDate ? formFields.birthDate._i : undefined;
-		if(formFields.birthDate){
+	const modifyUserInfo = (FormInfo) => {
+		// const FormInfo = userForm.getFieldsValue();
+		const address = {country:FormInfo.country, postalcode: FormInfo.postalcode, street: FormInfo.street, city: FormInfo.city};
+		delete FormInfo.country
+		delete FormInfo.postalcode
+		delete FormInfo.street
+		delete FormInfo.city
+		FormInfo.address = address;
+		FormInfo.birthDate = FormInfo.birthDate ? FormInfo.birthDate._i : undefined;
+		if(FormInfo.birthDate){
 			if(UserSelected){
-				editUser(UserSelected._id,formFields).then(()=> {setIsEditModalVisible(false); updateList();});
+				editUser(UserSelected._id,FormInfo).then(()=> {setIsEditModalVisible(false); updateList();});
 				setIsEditModalVisible(false);
 			}else{
-				createUser(formFields).then(()=> {setIsEditModalVisible(false); updateList();});
+				createUser(FormInfo).then(()=> {setIsEditModalVisible(false); updateList();});
 			}
 		}else{
 			console.log('FECHA NECESARIA');
+			// console.log(userForm.validateFields())
 		}
 	}
 
 	const removeUser = (id) => {
-		deleteUser(id).then(()=> updateList())
-		;
+		  Modal.confirm({
+			title: '¿Are you sure?',
+			icon: <ExclamationCircleOutlined />,
+			content: 'You will delete this user.',
+			okText: 'Delete',
+			onOk(){deleteUser(id).then(()=> updateList())},
+			cancelText: 'Cancel',
+		});
 	}
+
+	const onFinish = (value) => {
+		modifyUserInfo(value);
+	}	
 	
   return (
     <React.Fragment>
@@ -93,20 +108,25 @@ export function LandingView() {
 				<Modal 
 					title="Edit user modal" 
 					visible={isEditModalVisible} 
-					onOk={()=> modifyUserInfo()} 
+					// onOk={()=> modifyUserInfo()} 
+					okButtonProps={{
+						form:"userForm",key:"submit", htmlType: 'submit'
+					}}
 					onCancel={()=>setIsEditModalVisible(false)}>
 					
 					<Form
+						id='userForm'
 						form = {userForm}
 						{...layout}
 						name="basic"
 						initialValues={{ remember: true }}
-						// onFinish={onFinish}
+						onFinish={onFinish}
 						// onFinishFailed={onFinishFailed}
 					>
 						<Form.Item
 							label="First Name"
 							name="firstname"
+							rules={[{ required: true, message: 'Please input your firstname!' }]}
 						>
 							<Input />
 						</Form.Item>
@@ -114,6 +134,7 @@ export function LandingView() {
 						<Form.Item
 							label="Last Name"
 							name="lastname"
+							rules={[{ required: true, message: 'Please input your lastname!' }]}
 						>
 							<Input />
 						</Form.Item>
@@ -121,6 +142,7 @@ export function LandingView() {
 						<Form.Item
 							label="Email"
 							name="email"
+							rules={[{ required: true, message: 'Please input your email!' }]}
 						>
 							<Input />
 						</Form.Item>
@@ -128,6 +150,7 @@ export function LandingView() {
 						<Form.Item
 							label="Birth Date"
 							name="birthDate"
+							rules={[{ required: true, message: 'Please input your birthDate!' }]}
 						>
 							<DatePicker onChange={(date, dateString)=> userForm.setFieldsValue(dateString ? {birthDate: moment(dateString)} : undefined)} />
 						</Form.Item>
@@ -136,6 +159,7 @@ export function LandingView() {
 						<Form.Item
 							label="Street"
 							name="street"
+							rules={[{ required: true, message: 'Please input your street!' }]}
 						>
 							<Input />
 						</Form.Item>
@@ -143,6 +167,7 @@ export function LandingView() {
 						<Form.Item
 							label="City"
 							name="city"
+							rules={[{ required: true, message: 'Please input your city!' }]}
 						>
 							<Input />
 						</Form.Item>
@@ -150,13 +175,22 @@ export function LandingView() {
 						<Form.Item
 							label="Country"
 							name="country"
+							rules={[{ required: true, message: 'Please input your country!' }]}
+							defaultValue={countriesOptions}
 						>
-							<Input />
+							{
+							<Select style={{ width: '30%' }}>
+								{
+									countriesOptions&&countriesOptions.map(country =><Option key={country}>{country}</Option>)
+								}
+							</Select>
+							}
 						</Form.Item>
 
 						<Form.Item
 							label="Postal Code"
 							name="postalcode"
+							rules={[{ required: true, message: 'Please input your postalcode!' }]}
 						>
 							<Input />
 						</Form.Item>
