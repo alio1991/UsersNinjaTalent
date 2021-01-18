@@ -48,7 +48,6 @@ export function LandingView() {
 		delete formFields.city
 		formFields.address = address;
 		formFields.birthDate = formFields.birthDate ? formFields.birthDate._i : undefined;
-		console.log(formFields);
 		if(formFields.birthDate){
 			if(UserSelected){
 				editUser(UserSelected._id,formFields).then(()=> {setIsEditModalVisible(false); updateList();});

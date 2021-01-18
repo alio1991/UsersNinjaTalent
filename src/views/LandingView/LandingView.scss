@@ -7,11 +7,12 @@
         &__user-row{
             display: flex;
             justify-content: space-between;
-            box-sizing: border-box;
             width: 50%;
             height: 5rem;
+            min-height: fit-content;
             margin-top: 0.5rem;
             background-color: var(--user-row-color);
+            
             
             &__user-info{
                 display: flex;
@@ -49,4 +50,14 @@
         }
     }
 
+}
+
+@media (max-width: 800px) {
+    .landing-view{
+        &__user-list{
+            &__user-row{
+                width: 90%;
+            }
+        }
+    }
 }
